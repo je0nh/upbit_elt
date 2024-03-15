@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  kafka-server:
+    image: kafka-server
+    container_name: kafka-server
+    hostname: kafka-server
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    networks:
+      - hadoop-eco
+    
+  kafka-connect:
+    image: kafka-connect
+    container_name: kafka-connect
+    hostname: kafka-connect
+    ports:
+      - "8083:8083"
+    depends_on:
+      - kafka-server
+    networks:
+      - hadoop-eco
+    
+
+networks:
+  hadoop-eco:

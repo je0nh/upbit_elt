@@ -1,0 +1,75 @@
+version: "3.7"
+
+x-datanode_base: &datanode_base
+  image: hadoop-datanode
+  networks:
+    - bridge
+
+services:
+  namenode:
+    image: hadoop-namenode
+    container_name: namenode
+    hostname: namenode
+    ports:
+      - "9098:9870" # namenode web UI
+    volumes:
+      - namenode:/opt/hadoop/dfs/name # namenode data mount
+      - namenode:/opt/spark/eventLog # spark history log data mount 
+      - namenode:/opt/hadoop/yarn/timeline # yarn timeline data mount
+    networks:
+      - bridge
+
+  datanode01:
+    <<: *datanode_base
+    container_name: datanode01
+    hostname: datanode01
+    volumes:
+      - datanode01:/opt/hadoop/dfs/data
+      - datanode01:/opt/hadoop/yarn/data
+      - namenode:/opt/spark/eventLog
+  datanode02:
+    <<: *datanode_base
+    container_name: datanode02
+    hostname: datanode02
+    volumes:
+      - datanode02:/opt/hadoop/dfs/data
+      - datanode02:/opt/hadoop/yarn/data
+      - namenode:/opt/spark/eventLog
+  datanode03:
+    <<: *datanode_base
+    container_name: datanode03
+    hostname: datanode03
+    volumes:
+      - datanode03:/opt/hadoop/dfs/data
+      - datanode03:/opt/hadoop/yarn/data
+      - namenode:/opt/spark/eventLog
+
+  resourcemanager:
+    image: resourcemanager
+    container_name: resourcemanager
+    hostname: resourcemanager
+    ports:
+      - "9099:8088"
+    networks:
+      - bridge
+
+  yarntimelineserver:
+    image: yarn-timelineserver
+    container_name: yarntimelineserver
+    hostname: yarntimelineserver
+    ports:
+      - "9096:8188"
+    networks:
+      - bridge
+    volumes:
+      - namenode:/opt/hadoop/yarn/timeline
+  
+
+volumes:
+  namenode:
+  datanode01:
+  datanode02:
+  datanode03:
+
+networks:
+  bridge:

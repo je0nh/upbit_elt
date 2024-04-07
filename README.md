@@ -31,17 +31,134 @@
     <img width="800" alt="Screenshot 2024-04-07 at 11 23 39 PM" src="https://github.com/je0nh/upbit_elt/assets/145730125/c7313ad9-ed44-417b-85c9-05dee1221fa9">
     
   - SCP를 이용한 전달 대신 python 라이브러리인 hdfs를 사용하여 데이터를 전달
-    <img width="500" alt="Screenshot 2024-04-07 at 11 24 16 PM" src="https://github.com/je0nh/upbit_elt/assets/145730125/ee46d413-491b-4633-899d-919c20ecf084">
+    ```python
+    def to_hdfs(**context):
+        client = InsecureClient(f'http://{hdfs_ip_secret}:{hdfs_port_secret}', user=hdfs_id_secret)
+    
+        file_name = context['task_instance'].xcom_pull(key='file_name')
+        local_file_path = context['task_instance'].xcom_pull(key='local_file_path')
+        
+        sys_date = now.strftime('%y%m%d')
+        var_date = Variable.get("to_date")
+        
+        if sys_date == var_date:
+            hdfs_file_path = f'{hdfs_path_secret}/{var_date}/{file_name}'
+        else:
+            Variable.set("y_date", var_date)
+            Variable.set("to_date", sys_date)
+            client.makedirs(f'{hdfs_path_secret}/{sys_date}')
+            hdfs_file_path = f'{hdfs_path_secret}/{sys_date}/{file_name}'
+    
+        with open(local_file_path, 'rb') as local_file:
+            with client.write(hdfs_file_path) as hdfs_file:
+                hdfs_file.write(local_file.read())
+            
+        os.remove(local_file_path)
+        return print("데이터 적재 완료")
+    ```
     
   - Airflow의 variable과 Xcom을 사용해 해당하는 날짜의 디렉토리를 만들고 자동으로 해당하는 날짜에 candle 데이터를 저장
   - variable secret를 이용해 보안에 민감할 수 있는 변수 숨김
 
 # 프로젝트 진행과정
 1. Upbit에서 데이터를 추출
-2. Hadoop을 이용한 Data Lake 구축
-3. Hive를 이용한 Data Warehouse 구축
-4. Flask를 통해 Hive에서 데이터를 가져와 candle 예측량 계산 -> 예측한 데이터 저장
-5. Tableau를 이용한 시각화
+    - Code spinet (upbit.py)
+        ```python
+        ...
+        def candles(self, type: str, market: str, unit=1, to='', count=1, convertingPriceUnit='KRW') -> list:
+            if type == 'minutes':
+                quotation = f'candles/{type}/1?market={market}&unit={unit}&to={to}&count={count}&convertingPriceUnit={convertingPriceUnit}'
+            elif type == 'days':
+                quotation = f'candles/{type}/1?market={market}&to={to}&count={count}&convertingPriceUnit={convertingPriceUnit}'
+            else:
+                quotation = f'candles/{type}/1?market={market}&to={to}&count={count}'
+            response = self.call(quotation)
+            return response.json()
+        ...
+        ```
+3. Airflow를 활용해 설정한 시간마다 배치 단위로 데이터 처리, Xcom을 이용한 파일 이름 변수 전달
+   - Code spinet (min_dag.py)
+        ```python
+        ...
+        init_dag = DAG(
+          dag_id = 'min_candle', 
+          default_args = init_args,  
+          schedule_interval = '*/2 * * * * '
+        )
+        ...
+        ```
+    - Code spinet (min_dag.py)
+      ```python
+      ...
+      # def min_candle
+      context['task_instance'].xcom_push(key='file_name', value=file_name)
+      context['task_instance'].xcom_push(key='local_file_path', value=local_file_path)
+      ...
+      # def to_hdfs
+      file_name = context['task_instance'].xcom_pull(key='file_name')
+      local_file_path = context['task_instance'].xcom_pull(key='local_file_path')
+      ...
+4. Hadoop을 이용한 Data Lake 구축
+5. 날짜가 바뀌면 variable에 해당 날짜와 전날의 날짜 저장
+    - Code spinet (min_dag.py)
+        ```python
+        ...
+        if sys_date == var_date:
+            hdfs_file_path = f'{hdfs_path_secret}/{var_date}/{file_name}'
+        else:
+            Variable.set("y_date", var_date)
+            Variable.set("to_date", sys_date)
+            client.makedirs(f'{hdfs_path_secret}/{sys_date}')
+            hdfs_file_path = f'{hdfs_path_secret}/{sys_date}/{file_name}'
+        ...
+        ```
+7. Hive를 이용한 Data Warehouse 구축
+8. Hive로 데이터 자동 업로드
+   - Code spinet (hive_pyhive.py)
+       ```python
+       ...
+       def load_to_hive(**context):
+            host = Variable.get("hdfs_ip_secret")
+            port = 10000
+            username = Variable.get("hive_user_secret")
+            database = 'upbit_lake'
+            
+            conn = hive.Connection(host=host, port=port, username=username, database=database)
+            
+            hql=(
+                    f"""
+                    CREATE EXTERNAL TABLE IF NOT EXISTS candle_{y_date} (
+                        market STRING,
+                        candle_date_time_utc STRING,
+                        candle_date_time_kst STRING,
+                        opening_price Double,
+                        high_price Double,
+                        low_price Double,
+                        trade_price Double,
+                        `timestamp` INT,
+                        candle_acc_trade_price Double,
+                        candle_acc_trade_volume Double,
+                        unit INT
+                    )
+                    STORED AS PARQUET
+                    LOCATION '/candle/{y_date}'
+                    """
+                )
+       
+            cursor = conn.cursor()
+            cursor.execute(hql)
+       
+            cursor.close()
+            conn.close()
+       ...
+       ```
+10. Flask를 통해 Hive에서 데이터를 가져와 candle 예측량 계산 -> 예측한 데이터 저장
+11. Tableau를 이용한 시각화
+    
+    <img width="651" alt="Screenshot 2024-04-07 at 11 53 14 PM" src="https://github.com/je0nh/upbit_elt/assets/145730125/424ff29d-d4b4-4e86-8ba7-dac5f2ffe27c">
+    <img width="646" alt="Screenshot 2024-04-07 at 11 53 23 PM" src="https://github.com/je0nh/upbit_elt/assets/145730125/0fc7eb0e-2a8c-47f0-b131-e3198d23c864">
+
+
 
 ## Stack
 

@@ -11,4 +11,12 @@
     <name>dfs.datanode.use.datanode.hostname</name>
     <value>true</value>
   </property>
+  <property>
+    <name>dfs.datanode.http.address</name>
+    <value>0.0.0.0:9864</value>
+  </property>
+  <property>
+    <name>dfs.datanode.du.reserved</name>
+    <value>319856951951</value>
+  </property>
 </configuration>

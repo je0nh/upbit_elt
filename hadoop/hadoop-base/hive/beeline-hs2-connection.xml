@@ -1,0 +1,10 @@
+<configuration>
+<property>
+  <name>beeline.hs2.connection.user</name>
+  <value>hive</value>
+</property>
+<property>
+  <name>beeline.hs2.connection.password</name>
+  <value>hive</value>
+</property>
+</configuration>

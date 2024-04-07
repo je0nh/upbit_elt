@@ -2,56 +2,71 @@ version: "3.7"
 
 x-datanode_base: &datanode_base
   image: hadoop-datanode
-  networks:
-    - bridge
 
 services:
   namenode:
-    image: hadoop-namenode
+    image: hadoop-hive
     container_name: namenode
     hostname: namenode
     ports:
-      - "9098:9870" # namenode web UI
+      - "9094:9870" # namenode web UI
     volumes:
       - namenode:/opt/hadoop/dfs/name # namenode data mount
       - namenode:/opt/spark/eventLog # spark history log data mount 
       - namenode:/opt/hadoop/yarn/timeline # yarn timeline data mount
     networks:
-      - bridge
+      hd_bridge:
+        ipv4_address: 192.0.0.3
 
   datanode01:
     <<: *datanode_base
     container_name: datanode01
     hostname: datanode01
+    ports:
+      - "9097:9864"
     volumes:
       - datanode01:/opt/hadoop/dfs/data
       - datanode01:/opt/hadoop/yarn/data
       - namenode:/opt/spark/eventLog
+    networks:
+      hd_bridge:
+        ipv4_address: 192.0.0.4
   datanode02:
     <<: *datanode_base
     container_name: datanode02
     hostname: datanode02
+    ports:
+      - "9098:9864"
     volumes:
       - datanode02:/opt/hadoop/dfs/data
       - datanode02:/opt/hadoop/yarn/data
       - namenode:/opt/spark/eventLog
+    networks:
+      hd_bridge:
+        ipv4_address: 192.0.0.5
   datanode03:
     <<: *datanode_base
     container_name: datanode03
     hostname: datanode03
+    ports:
+      - "9099:9864"
     volumes:
       - datanode03:/opt/hadoop/dfs/data
       - datanode03:/opt/hadoop/yarn/data
       - namenode:/opt/spark/eventLog
+    networks:
+      hd_bridge:
+        ipv4_address: 192.0.0.6
 
   resourcemanager:
     image: resourcemanager
     container_name: resourcemanager
     hostname: resourcemanager
     ports:
-      - "9099:8088"
+      - "9095:8088"
     networks:
-      - bridge
+      hd_bridge:
+        ipv4_address: 192.0.0.7
 
   yarntimelineserver:
     image: yarn-timelineserver
@@ -60,10 +75,22 @@ services:
     ports:
       - "9096:8188"
     networks:
-      - bridge
+      hd_bridge:
+        ipv4_address: 192.0.0.8
     volumes:
       - namenode:/opt/hadoop/yarn/timeline
   
+  hivemetastore:
+    image: mysql:latest
+    container_name: hivemetastore
+    hostname: hivemetastore
+    ports:
+      - "3360:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 5046
+    networks:
+      hd_bridge:
+        ipv4_address: 192.0.0.10
 
 volumes:
   namenode:
@@ -72,4 +99,9 @@ volumes:
   datanode03:
 
 networks:
-  bridge:
+  hd_bridge:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.0.0.0/16

@@ -22,6 +22,14 @@
         <name>yarn.nodemanager.logs-dirs</name>
         <value>/opt/hadoop/yarn/data</value>
     </property>
+    <property>
+        <name>yarn.nodemanager.resource.cpu-vcores</name>
+        <value>2</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.resource.memory-mb</name>
+        <value>3072</value>
+    </property>
     <!-- timeline server config -->
     <property>
         <name>yarn.timeline-service.enabled</name>

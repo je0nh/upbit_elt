@@ -10,5 +10,3 @@ ADD start.sh /start.sh
 RUN chmod +x /start.sh
 
 EXPOSE 9000 9870
-
-CMD ["/start.sh", "/opt/hadoop/dfs/name"]

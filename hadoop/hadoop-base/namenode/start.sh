@@ -5,12 +5,15 @@ NAME_DIR=$1
 echo $NAME_DIR
 
 # 비어있지 않다면 이미 포맷된 것이므로 포맷을 진행
-if [ "$(ls -A $NAME_DIR)" ]; then
-  echo "NameNode is not formatted. Formatting NameNode."
-  echo "Y" | $HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR namenode -format
-else
-  echo "NameNode is already formatted."
-fi
+# if [ "$(ls -A $NAME_DIR)" ]; then
+#   echo "NameNode is not formatted. Formatting NameNode."
+#   echo "Y" | $HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR namenode -format
+# else
+#   echo "NameNode is already formatted."
+# fi
+
+echo "NameNode is not formatted. Formatting NameNode."
+echo "Y" | $HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR namenode -format
 
 # NameNode 기동
 $HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR namenode

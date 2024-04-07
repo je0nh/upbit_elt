@@ -25,7 +25,7 @@
   
     <img width="600" alt="Screenshot 2024-04-08 at 12 21 09 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/a4bb956e-3a5f-4d44-b7e1-722508f80681">
 
-  - 본 프로젝트와 비교해서 Hadoop을 기준으로 필요없는 DB 제거
+  - 본 프로젝트와 비교해서 Hadoop을 기준으로 앞, 뒤로 필요없는 DB 제거
   - API 데이터를 HDFS로 전달할때 기존엔 SCP를 사용해서 데이터를 전달 -> 데이터 전송시간이 느림, 데이터 무결성과 보안문제
 
     <img width="800" alt="Screenshot 2024-04-07 at 11 23 39 PM" src="https://github.com/je0nh/upbit_elt/assets/145730125/c7313ad9-ed44-417b-85c9-05dee1221fa9">

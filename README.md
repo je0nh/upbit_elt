@@ -99,7 +99,37 @@
       local_file_path = context['task_instance'].xcom_pull(key='local_file_path')
       ...
 4. Hadoop을 이용한 Data Lake 구축
-5. 날짜가 바뀌면 variable에 해당 날짜와 전날의 날짜 저장
+   - Docker image build
+     
+       <img width="500" alt="Screenshot 2024-04-08 at 12 27 37 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/1090b9ff-7401-4360-9abc-a5bfedf3584b">
+
+    - yarn-site.xml
+        ```xml
+        <property>
+            <name>yarn.nodemanager.resource.cpu-vcores</name>
+            <value>2</value>
+        </property>
+        <property>
+            <name>yarn.nodemanager.resource.memory-mb</name>
+            <value>3072</value>
+        </property>
+        ```
+
+        <img width="700" alt="Screenshot 2024-04-08 at 12 34 33 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/252ce7e0-18a3-457d-80ee-05cc7c5b7620">
+
+
+    - hdfs-site.xml (datanode)
+        ```xml
+        <property>
+            <name>dfs.datanode.du.reserved</name>
+            <value>319856951951</value>
+        </property>
+        ```
+
+        <img width="700" alt="Screenshot 2024-04-08 at 12 32 12 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/3eb60e0c-2d78-48ab-b1ae-0c9d57d5b8f6">
+
+    
+6. 날짜가 바뀌면 variable에 해당 날짜와 전날의 날짜 저장
     - Code spinet (min_dag.py)
         ```python
         ...
@@ -112,6 +142,15 @@
             hdfs_file_path = f'{hdfs_path_secret}/{sys_date}/{file_name}'
         ...
         ```
+    - Airflow variable
+      
+      <img width="700" alt="Screenshot 2024-04-08 at 12 35 40 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/0159d23c-36e6-465e-9d09-fa005ed329a0">
+
+    - HDFS
+      
+      <img width="700" alt="Screenshot 2024-04-08 at 12 36 59 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/100b4c98-2885-44d2-9569-44f018872346">
+
+
 7. Hive를 이용한 Data Warehouse 구축
 8. Hive로 데이터 자동 업로드
    - Code spinet (hive_pyhive.py)
@@ -152,6 +191,17 @@
             conn.close()
        ...
        ```
+
+    - Hive SQL
+        ```SQL
+        SELECT market , candle_date_time_utc , candle_date_time_kst , opening_price
+        FROM candle_240407
+        WHERE market = 'KRW-BTC';
+        ```
+
+        <img width="700" alt="Screenshot 2024-04-08 at 12 41 14 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/f2e4d1aa-f565-45cb-a971-b5873ce0a424">
+
+        
 10. Flask를 통해 Hive에서 데이터를 가져와 candle 예측량 계산 -> 예측한 데이터 저장
 11. Tableau를 이용한 시각화
     

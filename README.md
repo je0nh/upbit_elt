@@ -114,7 +114,8 @@
 4. Hadoop을 이용한 Data Lake 구축
    - Docker image build
      
-       <img width="500" alt="Screenshot 2024-04-08 at 12 27 37 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/1090b9ff-7401-4360-9abc-a5bfedf3584b">
+       <img width="500" alt="Screenshot 2024-04-08 at 1 13 48 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/fbe98078-6fdc-4a8a-9e76-b42b0e4a1801">
+
 
     - yarn-site.xml
         ```xml

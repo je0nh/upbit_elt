@@ -9,7 +9,7 @@
   |이정훈|API, Airflow server, MySQL server|
   |정의찬|MySQL server, Hadoop server, Hive|
   
-- Develop 기간: 24.3.18 ~ 24.4.7 (3주)
+- Develop (개인) 기간: 24.3.18 ~ 24.4.7 (3주)
 
 # 프로젝트 목표
 - Upbit candle 데이터를 이용한 ELT 파이프라인 구축
@@ -17,11 +17,11 @@
 - 자동화 파이프라인 구축
 
 # Architecture
-- 본 프로젝트
+- 본 프로젝트 (팀)
 
   <img width="700" alt="Screenshot 2024-04-07 at 10 48 15 PM" src="https://github.com/je0nh/upbit_elt/assets/145730125/d67414d4-1ba8-4773-9934-a3773fc8e7e2">
 
-- Develop
+- Develop (개인)
   
     <img width="600" alt="Screenshot 2024-04-08 at 12 21 09 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/a4bb956e-3a5f-4d44-b7e1-722508f80681">
 
@@ -213,7 +213,7 @@
 
 
 
-## Stack
+# Stack
 
 **Environment** <br>
 <img src="https://img.shields.io/badge/jupyter-F37626?style=for-the-badge&logo=jupyter&logoColor=white">
@@ -233,3 +233,34 @@
 <img src="https://img.shields.io/badge/apachehadoop-66CCFF?style=for-the-badge&logo=apachehadoop&logoColor=white">
 <img src="https://img.shields.io/badge/flask-000000?style=for-the-badge&logo=flask&logoColor=white">
 <img src="https://img.shields.io/badge/tableau-E97627?style=for-the-badge&logo=tableau&logoColor=white">
+<img src="https://img.shields.io/badge/apachekafka-231F20?style=for-the-badge&logo=apachekafka&logoColor=white">
+
+# 프로젝트 한계
+1. Hadoop(jdk-11)과 Hive(jdk-8) jdk version 차이로 인해 Hive에서 MR을 할수 없음 -> Hive 4.0.0 버전이 새로 출시 됨에 따라, Hadoop 3.3.6에서 사용가능할 것으로 생각함
+
+    ```bash
+    org.jkiss.dbeaver.model.sql.DBSQLException: SQL Error [2] [08S01]: Error while processing statement: FAILED: Execution Error, return code 2 from org.apache.hadoop.hive.ql.exec.mr.MapRedTask
+	at org.jkiss.dbeaver.model.impl.jdbc.exec.JDBCStatementImpl.executeStatement(JDBCStatementImpl.java:133)
+	at org.jkiss.dbeaver.ui.editors.sql.execute.SQLQueryJob.executeStatement(SQLQueryJob.java:614)
+	at org.jkiss.dbeaver.ui.editors.sql.execute.SQLQueryJob.lambda$2(SQLQueryJob.java:505)
+	at org.jkiss.dbeaver.ui.editors.sql.execute.SQLQueryJob.executeSingleQuery(SQLQueryJob.java:527)
+	at org.jkiss.dbeaver.ui.editors.sql.execute.SQLQueryJob.extractData(SQLQueryJob.java:976)
+	at org.jkiss.dbeaver.ui.editors.sql.SQLEditor$QueryResultsContainer.readData(SQLEditor.java:4133)
+	at org.jkiss.dbeaver.ui.controls.resultset.ResultSetJobDataRead.lambda$0(ResultSetJobDataRead.java:123)
+	at org.jkiss.dbeaver.model.exec.DBExecUtils.tryExecuteRecover(DBExecUtils.java:190)
+	at org.jkiss.dbeaver.ui.controls.resultset.ResultSetJobDataRead.run(ResultSetJobDataRead.java:121)
+	at org.jkiss.dbeaver.ui.controls.resultset.ResultSetViewer$ResultSetDataPumpJob.run(ResultSetViewer.java:5148)
+	at org.jkiss.dbeaver.model.runtime.AbstractJob.run(AbstractJob.java:114)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.sql.SQLException: Error while processing statement: FAILED: Execution Error, return code 2 from org.apache.hadoop.hive.ql.exec.mr.MapRedTask
+	at org.apache.hive.jdbc.HiveStatement.waitForOperationToComplete(HiveStatement.java:354)
+	at org.apache.hive.jdbc.HiveStatement.execute(HiveStatement.java:245)
+	at org.jkiss.dbeaver.model.impl.jdbc.exec.JDBCStatementImpl.execute(JDBCStatementImpl.java:330)
+	at org.jkiss.dbeaver.model.impl.jdbc.exec.JDBCStatementImpl.executeStatement(JDBCStatementImpl.java:131)
+	... 11 more
+    ```
+
+    <img width="593" alt="Screenshot 2024-04-08 at 12 51 15 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/bb69f647-c8cf-43a7-9562-4368e442b066">
+
+2. Airflow에서 Hiveconnector 사용할수 없었음 -> pyhive를 사용해 대체
+

@@ -56,7 +56,8 @@
         os.remove(local_file_path)
         return print("데이터 적재 완료")
     ```
-    
+
+  - HDFS에 데이터 저장시 parquet 포멧 사용
   - Airflow의 variable과 Xcom을 사용해 해당하는 날짜의 디렉토리를 만들고 자동으로 해당하는 날짜에 candle 데이터를 저장
   - variable secret를 이용해 보안에 민감할 수 있는 변수 숨김
 
@@ -149,6 +150,8 @@
     - HDFS
       
       <img width="700" alt="Screenshot 2024-04-08 at 12 36 59 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/100b4c98-2885-44d2-9569-44f018872346">
+      
+      <img width="700" alt="Screenshot 2024-04-08 at 12 42 39 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/d5f98098-bd09-45bc-98a7-824ad3f92e64">
 
 
 7. Hive를 이용한 Data Warehouse 구축

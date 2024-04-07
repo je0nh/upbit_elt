@@ -50,6 +50,8 @@ x-airflow-common:
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
   image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.8.2}
+  networks:
+      hadoop-base_hd_bridge:
   # build: .
   environment:
     &airflow-common-env
@@ -62,6 +64,7 @@ x-airflow-common:
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
     AIRFLOW__CORE__DEFAULT_TIMEZONE: 'Asia/seoul'
+    AIRFLOW__CORE__TEST_CONNECTION: 'Enable'
     # yamllint disable rule:line-length
     # Use simple http server on scheduler for health checks
     # See https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/logging-monitoring/check-health.html#scheduler-health-check-server
@@ -99,6 +102,8 @@ services:
       retries: 5
       start_period: 5s
     restart: always
+    networks:
+      hadoop-base_hd_bridge:
 
   redis:
     image: redis:latest
@@ -111,6 +116,8 @@ services:
       retries: 50
       start_period: 30s
     restart: always
+    networks:
+      hadoop-base_hd_bridge:
 
   airflow-webserver:
     <<: *airflow-common
@@ -283,3 +290,7 @@ services:
 
 volumes:
   postgres-db-volume:
+
+networks:
+  hadoop-base_hd_bridge:
+    external: true

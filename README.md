@@ -248,4 +248,20 @@
     <img width="593" alt="Screenshot 2024-04-08 at 12 51 15 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/bb69f647-c8cf-43a7-9562-4368e442b066">
 
 2. Airflow에서 Hiveconnector 사용할수 없었음 -> pyhive를 사용해 대체
+   ```bash
+   Traceback (most recent call last):
+	  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 444, in _execute_task
+	    result = _execute_callable(context=context, **execute_callable_kwargs)
+	  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 414, in _execute_callable
+	    return execute_callable(context=context, **execute_callable_kwargs)
+	  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/providers/apache/hive/operators/hive.py", line 166, in execute
+	    self.hook.run_cli(hql=self.hql, schema=self.schema, hive_conf=self.hiveconfs)
+	  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/providers/apache/hive/hooks/hive.py", line 292, in run_cli
+	    sub_process: Any = subprocess.Popen(
+	  File "/usr/local/lib/python3.8/subprocess.py", line 858, in __init__
+	    self._execute_child(args, executable, preexec_fn, close_fds,
+	  File "/usr/local/lib/python3.8/subprocess.py", line 1720, in _execute_child
+	    raise child_exception_type(errno_num, err_msg, err_filename)
+   PermissionError: [Errno 13] Permission denied: 'beeline'
+   ```
 

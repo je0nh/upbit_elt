@@ -58,8 +58,20 @@
     ```
 
   - HDFS에 데이터 저장시 parquet 포멧 사용
-  - Airflow의 variable과 Xcom을 사용해 해당하는 날짜의 디렉토리를 만들고 자동으로 해당하는 날짜에 candle 데이터를 저장
+  - Airflow의 variable과 XComs을 사용해 해당하는 날짜의 디렉토리를 만들고 자동으로 해당하는 날짜에 candle 데이터를 저장
+      - variable
+ 
+       	<img width="700" alt="Screenshot 2024-04-08 at 1 05 43 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/02401fea-699c-41a6-bfb1-f3feb893e110">
+
+        
+      - XComs
+
+		<img width="700" alt="Screenshot 2024-04-08 at 1 06 23 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/05f7ce62-c785-4340-b543-067f8477c969">
+
+
   - variable secret를 이용해 보안에 민감할 수 있는 변수 숨김
+    <img width="700" alt="Screenshot 2024-04-08 at 1 04 46 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/3866a57a-cdf4-4c8d-9037-36aa7b34dc90">
+
 
 # 프로젝트 진행과정
 1. Upbit에서 데이터를 추출

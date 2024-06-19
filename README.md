@@ -1,5 +1,5 @@
 # Data Engineering project - develop
-- 본 프로젝트 기간: 24.3.18 ~ 24.4.7 (3주)
+- 프로젝트 기간: 24.3.18 ~ 24.4.7 (3주)
 
 # 프로젝트 목표
 - Upbit candle 데이터를 이용한 ELT 파이프라인 구축

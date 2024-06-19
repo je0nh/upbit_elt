@@ -199,8 +199,7 @@
         <img width="700" alt="Screenshot 2024-04-08 at 12 41 14 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/f2e4d1aa-f565-45cb-a971-b5873ce0a424">
 
         
-10. Flask를 통해 Hive에서 데이터를 가져와 candle 예측량 계산 -> 예측한 데이터 저장
-11. Tableau를 이용한 시각화
+10. Tableau를 이용한 시각화
     
     <img width="651" alt="Screenshot 2024-04-07 at 11 53 14 PM" src="https://github.com/je0nh/upbit_elt/assets/145730125/424ff29d-d4b4-4e86-8ba7-dac5f2ffe27c">
     <img width="646" alt="Screenshot 2024-04-07 at 11 53 23 PM" src="https://github.com/je0nh/upbit_elt/assets/145730125/0fc7eb0e-2a8c-47f0-b131-e3198d23c864">

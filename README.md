@@ -1,15 +1,5 @@
-# 이어드림 3기 Data Engineering project - develop
-- 본 프로젝트 기간: 23.8.29 ~ 23.9.12 (2주)
-- 개발 인원: 4명 (박태근, 김민규, 이정훈, 정의찬)
-    
-  |이름|역할|
-  |---|---|
-  |박태근|Web socket, Kafka server, Tableau|
-  |김민규|Deep learning server, Flask|
-  |이정훈|API, Airflow server, MySQL server|
-  |정의찬|MySQL server, Hadoop server, Hive|
-  
-- Develop (개인) 기간: 24.3.18 ~ 24.4.7 (3주)
+# Data Engineering project - develop
+- 본 프로젝트 기간: 24.3.18 ~ 24.4.7 (3주)
 
 # 프로젝트 목표
 - Upbit candle 데이터를 이용한 ELT 파이프라인 구축
@@ -17,21 +7,11 @@
 - 자동화 파이프라인 구축
 
 # Architecture
-- 본 프로젝트 (팀)
 
-  <img width="700" alt="Screenshot 2024-04-07 at 10 48 15 PM" src="https://github.com/je0nh/upbit_elt/assets/145730125/d67414d4-1ba8-4773-9934-a3773fc8e7e2">
+<img width="600" alt="Screenshot 2024-04-08 at 2 50 24 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/0b07056f-42df-42d7-b8a3-916a6970a426">
 
-- Develop (개인)
-  
-    <img width="600" alt="Screenshot 2024-04-08 at 2 50 24 AM" src="https://github.com/je0nh/upbit_elt/assets/145730125/0b07056f-42df-42d7-b8a3-916a6970a426">
-
-
-  - 본 프로젝트와 비교해서 Hadoop을 기준으로 앞, 뒤로 필요없는 DB 제거
-  - API 데이터를 HDFS로 전달할때 기존엔 SCP를 사용해서 데이터를 전달 -> 데이터 전송시간이 느림, 데이터 무결성과 보안문제
-
-    <img width="800" alt="Screenshot 2024-04-07 at 11 23 39 PM" src="https://github.com/je0nh/upbit_elt/assets/145730125/c7313ad9-ed44-417b-85c9-05dee1221fa9">
     
-  - SCP를 이용한 전달 대신 python 라이브러리인 hdfs를 사용하여 데이터를 전달
+  - python 라이브러리인 hdfs를 사용하여 데이터를 전달
     ```python
     def to_hdfs(**context):
         client = InsecureClient(f'http://{hdfs_ip_secret}:{hdfs_port_secret}', user=hdfs_id_secret)
@@ -238,16 +218,13 @@
 <img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white">
 
 **Config** <br>
-<img src="https://img.shields.io/badge/amazonec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white">
 <img src="https://img.shields.io/badge/ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white">
 <img src="https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">
 
 **Framework** <br>
 <img src="https://img.shields.io/badge/apacheairflow-017CEE?style=for-the-badge&logo=apacheairflow&logoColor=white">
 <img src="https://img.shields.io/badge/apachehadoop-66CCFF?style=for-the-badge&logo=apachehadoop&logoColor=white">
-<img src="https://img.shields.io/badge/flask-000000?style=for-the-badge&logo=flask&logoColor=white">
 <img src="https://img.shields.io/badge/tableau-E97627?style=for-the-badge&logo=tableau&logoColor=white">
-<img src="https://img.shields.io/badge/apachekafka-231F20?style=for-the-badge&logo=apachekafka&logoColor=white">
 
 # 프로젝트 한계
 1. Hadoop(jdk-11)과 Hive(jdk-8) jdk version 차이로 인해 Hive에서 MR을 할수 없음 -> Hive 4.0.0 버전이 새로 출시 됨에 따라, Hadoop 3.3.6에서 사용가능할 것으로 생각함
